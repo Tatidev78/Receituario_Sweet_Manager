@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model categorias {
+  id       Int        @id @default(autoincrement())
+  nome     String     @db.VarChar(100)
+  receitas receitas[]
+}
+
+model clientes {
+  id        Int       @id @default(autoincrement())
+  nome      String    @db.VarChar(100)
+  telefone  String?   @db.VarChar(20)
+  email     String?   @db.VarChar(150)
+  endereco  String?
+  criado_em DateTime? @default(now()) @db.Timestamp(6)
+  pedidos   pedidos[]
+}
+
+model ingredientes {
+  id                   Int                    @id @default(autoincrement())
+  nome                 String                 @db.VarChar(100)
+  unidade              String                 @db.VarChar(50)
+  quantidade_estoque   Float?                 @default(0)
+  criado_em            DateTime?              @default(now()) @db.Timestamp(6)
+  receita_ingredientes receita_ingredientes[]
+}
+
+model pedido_produtos {
+  id             Int      @id @default(autoincrement())
+  quantidade     Int
+  preco_unitario Decimal  @db.Decimal(10, 2)
+  pedido_id      Int
+  produto_id     Int
+  pedidos        pedidos  @relation(fields: [pedido_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  produtos       produtos @relation(fields: [produto_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model pedidos {
+  id              Int               @id @default(autoincrement())
+  status          String?           @default("PENDENTE") @db.VarChar(50)
+  total           Decimal?          @db.Decimal(10, 2)
+  criado_em       DateTime?         @default(now()) @db.Timestamp(6)
+  cliente_id      Int
+  pedido_produtos pedido_produtos[]
+  clientes        clientes          @relation(fields: [cliente_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model produtos {
+  id              Int               @id @default(autoincrement())
+  nome            String            @db.VarChar(150)
+  preco           Decimal           @db.Decimal(10, 2)
+  imagem_url      String?           @db.VarChar(255)
+  criado_em       DateTime?         @default(now()) @db.Timestamp(6)
+  receita_id      Int
+  pedido_produtos pedido_produtos[]
+  receitas        receitas          @relation(fields: [receita_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model receita_ingredientes {
+  id             Int          @id @default(autoincrement())
+  quantidade     Float
+  unidade        String       @db.VarChar(50)
+  receita_id     Int
+  ingrediente_id Int
+  ingredientes   ingredientes @relation(fields: [ingrediente_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  receitas       receitas     @relation(fields: [receita_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model receitas {
+  id                   Int                    @id @default(autoincrement())
+  titulo               String                 @db.VarChar(150)
+  descricao            String?
+  modo_preparo         String
+  usuario_id           Int?
+  categoria_id         Int?
+  tempo_preparo        Int?
+  rendimento           Int?
+  unidade              String?                @db.VarChar(50)
+  imagem_url           String?                @db.VarChar(255)
+  criado_em            DateTime?              @default(now()) @db.Timestamp(6)
+  atualizado_em        DateTime?              @default(now()) @db.Timestamp(6)
+  
+  produtos             produtos[]
+  receita_ingredientes receita_ingredientes[]
+  categorias           categorias?            @relation(fields: [categoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_receita_categoria")
+  usuarios             usuarios?              @relation(fields: [usuario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_receita_usuario")
+}
+
+model usuarios {
+  id         Int        @id @default(autoincrement())
+  nome       String     @db.VarChar(100)
+  email      String     @unique @db.VarChar(150)
+  senha_hash String?    @db.VarChar(255)
+  receitas   receitas[]
+}
