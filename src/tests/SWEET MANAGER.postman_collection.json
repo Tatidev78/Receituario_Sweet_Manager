@@ -1,0 +1,1607 @@
+{
+  "info": {
+    "_postman_id": "316bccad-f483-4adb-ac98-1c483c86ff52",
+    "name": "SWEET MANAGER",
+    "description": "# 🍰 Sweet Manager API\n\nAPI REST desenvolvida para gerenciamento de confeitaria, permitindo controlar usuários, clientes, receitas, categorias, ingredientes, produtos e pedidos.\n\n## Tecnologias\n\n- Node.js\n    \n- Express\n    \n- TypeScript\n    \n- Prisma ORM\n    \n- PostgreSQL\n    \n- Postman\n    \n- Newman\n    \n\n## Objetivo\n\nO projeto foi criado para praticar o desenvolvimento de APIs REST utilizando boas práticas de organização em camadas (Routes, Controllers e Services), integração com banco de dados relacional e testes automatizados.\n\n## Recursos disponíveis\n\n- 👤 Usuários\n    \n- 👥 Clientes\n    \n- 📖 Receitas\n    \n- 📂 Categorias\n    \n- 🥣 Ingredientes\n    \n- 🧁 Produtos\n    \n- 🛒 Pedidos\n    \n\n## Estrutura da API\n\nCada recurso possui operações CRUD:\n\n- GET\n    \n- GET por ID\n    \n- POST\n    \n- PUT\n    \n- DELETE\n    \n\n## Status do projeto\n\n✅ Conexão com PostgreSQL\n\n✅ Prisma ORM\n\n✅ CRUD de Usuários\n\n✅ CRUD de Clientes\n\n✅ CRUD de Categorias\n\n✅ CRUD de Ingredientes\n\n✅ CRUD de Receitas\n\n🚧 CRUD de Produtos\n\n🚧 CRUD de Pedidos\n\n## Ferramentas de teste\n\nOs endpoints são testados utilizando:\n\n- Postman\n    \n- Newman\n    \n\n## Desenvolvido por\n\nTatiana Amaral\n\n## Aprendizados\n\nDurante o desenvolvimento deste projeto foram praticados conceitos como:\n\n- Arquitetura em camadas\n    \n- Rotas REST\n    \n- Controllers\n    \n- Services\n    \n- Prisma ORM\n    \n- Relacionamentos entre tabelas\n    \n- PostgreSQL\n    \n- Testes de API\n    \n- Organização de código",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53985031",
+    "_collection_link": "https://go.postman.co/collection/53985031-316bccad-f483-4adb-ac98-1c483c86ff52?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Usuarios",
+      "item": [
+        {
+          "name": "GET- Listar usuarios",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const usuarios = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Retorna um array\", function () {\r",
+                  "    pm.expect(usuarios).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Existe pelo menos um usuário\", function () {\r",
+                  "    pm.expect(usuarios.length).to.be.greaterThan(0);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Buscar usuario por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const usuario = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"ID correto\", function () {\r",
+                  "    pm.expect(usuario.id).to.eql(Number(pm.environment.get(\"usuarioId\")));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Nome preenchido\", function () {\r",
+                  "    pm.expect(usuario.nome).to.not.be.empty;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Email contém @\", function () {\r",
+                  "    pm.expect(usuario.email).to.include(\"@\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/{{usuarioId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "{{usuarioId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST- Criar usuario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "const usuario = pm.response.json();\r",
+                  "\r",
+                  "pm.environment.set(\"usuarioId\", usuario.id);\r",
+                  "\r",
+                  "pm.test(\"Usuário possui ID\", function () {\r",
+                  "    pm.expect(usuario.id).to.be.a(\"number\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Nome preenchido\", function () {\r",
+                  "    pm.expect(usuario.nome).to.not.be.empty;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Email contém @\", function () {\r",
+                  "    pm.expect(usuario.email).to.include(\"@\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"id\": 5,\r\n    \"nome\": \"Maria Fernanda\",\r\n    \"email\": \"maria@email.com\",\r\n    \"senha_hash\": \"12345678\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT-Atualizar usuário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const usuario = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Nome atualizado\", function () {\r",
+                  "    pm.expect(usuario.nome).to.not.be.empty;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Email atualizado\", function () {\r",
+                  "    pm.expect(usuario.email).to.include(\"@\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"João Silva Atualizado\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "PUT {{baseUrl}}/usuarios/{{usuarioId}}",
+              "host": [
+                "PUT {{baseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "{{usuarioId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete- Excluir usuario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const resposta = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Mensagem de sucesso\", function () {\r",
+                  "    pm.expect(resposta.mensagem).to.eql(\"Usuário removido com sucesso\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/usuarios/5",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "usuarios",
+                "5"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Clientes",
+      "item": [
+        {
+          "name": "GET- Listar clientes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const clientes = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Retorna um array\", function () {\r",
+                  "    pm.expect(clientes).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Existe pelo menos um cliente\", function () {\r",
+                  "    pm.expect(clientes.length).to.be.greaterThan(0);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "GET {{baseUrl}}/clientes",
+              "host": [
+                "GET {{baseUrl}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Buscar cliente por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const cliente = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"ID correto\", function () {\r",
+                  "    pm.expect(cliente.id).to.eql(Number(pm.environment.get(\"clienteId\")));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Nome preenchido\", function () {\r",
+                  "    pm.expect(cliente.nome).to.not.be.empty;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Email contém @\", function () {\r",
+                  "    pm.expect(cliente.email).to.include(\"@\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "GET {{baseUrl}}/cliente/{{clienteId}}",
+              "host": [
+                "GET {{baseUrl}}"
+              ],
+              "path": [
+                "cliente",
+                "{{clienteId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST- Criar cliente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "const cliente = pm.response.json();\r",
+                  "\r",
+                  "// Salva automaticamente o ID\r",
+                  "pm.environment.set(\"clienteId\", cliente.id);\r",
+                  "\r",
+                  "pm.test(\"Cliente possui ID\", function () {\r",
+                  "    pm.expect(cliente.id).to.be.a(\"number\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Nome preenchido\", function () {\r",
+                  "    pm.expect(cliente.nome).to.not.be.empty;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Telefone informado\", function () {\r",
+                  "    pm.expect(cliente.telefone).to.not.be.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "POST {{baseUrl}}/clientes",
+              "host": [
+                "POST {{baseUrl}}"
+              ],
+              "path": [
+                "clientes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT-Atualizar cliente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const cliente = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Nome atualizado\", function () {\r",
+                  "    pm.expect(cliente.nome).to.not.be.empty;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Telefone atualizado\", function () {\r",
+                  "    pm.expect(cliente.telefone).to.not.be.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "PUT {{baseUrl}}/clientes/{{clienteId}}",
+              "host": [
+                "PUT {{baseUrl}}"
+              ],
+              "path": [
+                "clientes",
+                "{{clienteId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete- Excluir cliente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const resposta = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Mensagem correta\", function () {\r",
+                  "    pm.expect(resposta.mensagem).to.eql(\"Cliente removido com sucesso\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "DELETE {{baseUrl}}/clientes/{{clienteId}}",
+              "host": [
+                "DELETE {{baseUrl}}"
+              ],
+              "path": [
+                "clientes",
+                "{{clienteId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categorias",
+      "item": [
+        {
+          "name": "GET - Listar categorias",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const categorias = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Retorna um array\", function () {\r",
+                  "    pm.expect(categorias).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Existe pelo menos uma categoria\", function () {\r",
+                  "    pm.expect(categorias.length).to.be.greaterThan(0);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "GET {{baseUrl}}/categorias",
+              "host": [
+                "GET {{baseUrl}}"
+              ],
+              "path": [
+                "categorias"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Buscar categorias por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const categoria = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"ID correto\", function () {\r",
+                  "    pm.expect(categoria.id).to.eql(Number(pm.environment.get(\"categoriaId\")));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Nome preenchido\", function () {\r",
+                  "    pm.expect(categoria.nome).to.not.be.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "GET {{baseUrl}}/categorias/{{categoriaId}}",
+              "host": [
+                "GET {{baseUrl}}"
+              ],
+              "path": [
+                "categorias",
+                "{{categoriaId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST- Criar catergorias",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "const categoria = pm.response.json();\r",
+                  "\r",
+                  "pm.environment.set(\"categoriaId\", categoria.id);\r",
+                  "\r",
+                  "pm.test(\"Categoria possui ID\", function () {\r",
+                  "    pm.expect(categoria.id).to.be.a(\"number\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Nome preenchido\", function () {\r",
+                  "    pm.expect(categoria.nome).to.not.be.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "POST {{baseUrl}}/categorias",
+              "host": [
+                "POST {{baseUrl}}"
+              ],
+              "path": [
+                "categorias"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT-Atualizar categorias",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const categoria = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Nome atualizado\", function () {\r",
+                  "    pm.expect(categoria.nome).to.not.be.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "PUT {{baseUrl}}/categorias/{{categoriaId}}",
+              "host": [
+                "PUT {{baseUrl}}"
+              ],
+              "path": [
+                "categorias",
+                "{{categoriaId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete- Excluir categorias",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const resposta = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Mensagem correta\", function () {\r",
+                  "    pm.expect(resposta.mensagem).to.eql(\"Categoria removida com sucesso\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "DELETE {{baseUrl}}/categorias/{{categoriaId}}",
+              "host": [
+                "DELETE {{baseUrl}}"
+              ],
+              "path": [
+                "categorias",
+                "{{categoriaId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Ingredientes",
+      "item": [
+        {
+          "name": "GET - Listar ingredientes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const ingredientes = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Retorna um array\", function () {\r",
+                  "    pm.expect(ingredientes).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Existe pelo menos um ingrediente\", function () {\r",
+                  "    pm.expect(ingredientes.length).to.be.greaterThan(0);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "GET {{baseUrl}}/ingredientes",
+              "host": [
+                "GET {{baseUrl}}"
+              ],
+              "path": [
+                "ingredientes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Buscar ingredientes por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const ingrediente = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"ID correto\", function () {\r",
+                  "    pm.expect(ingrediente.id)\r",
+                  "    .to.eql(Number(pm.environment.get(\"ingredienteId\")));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Nome preenchido\", function () {\r",
+                  "    pm.expect(ingrediente.nome).to.not.be.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "GET {{baseUrl}}/ingredientes/{{ingredienteId}}",
+              "host": [
+                "GET {{baseUrl}}"
+              ],
+              "path": [
+                "ingredientes",
+                "{{ingredienteId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST- Criar ingredientes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "const ingrediente = pm.response.json();\r",
+                  "\r",
+                  "pm.environment.set(\"ingredienteId\", ingrediente.id);\r",
+                  "\r",
+                  "pm.test(\"Ingrediente possui ID\", function () {\r",
+                  "    pm.expect(ingrediente.id).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Nome preenchido\", function () {\r",
+                  "    pm.expect(ingrediente.nome).to.not.be.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "POST {{baseUrl}}/ingredientes",
+              "host": [
+                "POST {{baseUrl}}"
+              ],
+              "path": [
+                "ingredientes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT-Atualizar ingredientes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const ingrediente = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Nome atualizado\", function () {\r",
+                  "    pm.expect(ingrediente.nome).to.not.be.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "PUT {{baseUrl}}/ingredientes/{{ingredienteId}}",
+              "host": [
+                "PUT {{baseUrl}}"
+              ],
+              "path": [
+                "ingredientes",
+                "{{ingredienteId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete- Excluir ingredientes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const resposta = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Mensagem correta\", function () {\r",
+                  "    pm.expect(resposta.mensagem)\r",
+                  "    .to.eql(\"Ingrediente removido com sucesso\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "DELETE {{baseUrl}}/ingredientes/{{ingredienteId}}",
+              "host": [
+                "DELETE {{baseUrl}}"
+              ],
+              "path": [
+                "ingredientes",
+                "{{ingredienteId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Receitas",
+      "item": [
+        {
+          "name": "GET - Listar receitas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const receitas = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Retorna um array\", function () {\r",
+                  "    pm.expect(receitas).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Existe pelo menos uma receita\", function () {\r",
+                  "    pm.expect(receitas.length).to.be.greaterThan(0);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "GET {{baseUrl}}/receitas",
+              "host": [
+                "GET {{baseUrl}}"
+              ],
+              "path": [
+                "receitas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Buscar receitas por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const receita = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"ID correto\", function () {\r",
+                  "    pm.expect(receita.id)\r",
+                  "    .to.eql(Number(pm.environment.get(\"receitaId\")));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Nome da receita preenchido\", function () {\r",
+                  "    pm.expect(receita.nome).to.not.be.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "GET {{baseUrl}}/receitas/{{receitaId}}",
+              "host": [
+                "GET {{baseUrl}}"
+              ],
+              "path": [
+                "receitas",
+                "{{receitaId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST- Criar receitas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "const receita = pm.response.json();\r",
+                  "\r",
+                  "pm.environment.set(\"receitaId\", receita.id);\r",
+                  "\r",
+                  "pm.test(\"Receita possui ID\", function () {\r",
+                  "    pm.expect(receita.id).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Nome preenchido\", function () {\r",
+                  "    pm.expect(receita.nome).to.not.be.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "POST {{baseUrl}}/receitas",
+              "host": [
+                "POST {{baseUrl}}"
+              ],
+              "path": [
+                "receitas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT-Atualizar receitas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const receita = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Nome atualizado\", function () {\r",
+                  "    pm.expect(receita.nome).to.not.be.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "PUT {{baseUrl}}/receitas/{{receitaId}}",
+              "host": [
+                "PUT {{baseUrl}}"
+              ],
+              "path": [
+                "receitas",
+                "{{receitaId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete- Excluir receitas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const resposta = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Mensagem correta\", function () {\r",
+                  "    pm.expect(resposta.mensagem)\r",
+                  "    .to.eql(\"Receita removida com sucesso\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "DELETE {{baseUrl}}/receitas/{{receitaId}}",
+              "host": [
+                "DELETE {{baseUrl}}"
+              ],
+              "path": [
+                "receitas",
+                "{{receitaId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Produtos",
+      "item": [
+        {
+          "name": "GET - Listar produtos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const produtos = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Retorna um array\", function () {\r",
+                  "    pm.expect(produtos).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Existe pelo menos um produto\", function () {\r",
+                  "    pm.expect(produtos.length).to.be.greaterThan(0);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "GET {{baseUrl}}/produtos",
+              "host": [
+                "GET {{baseUrl}}"
+              ],
+              "path": [
+                "produtos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Buscar produtos por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const produto = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"ID correto\", function () {\r",
+                  "    pm.expect(produto.id)\r",
+                  "    .to.eql(Number(pm.environment.get(\"produtoId\")));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Nome preenchido\", function () {\r",
+                  "    pm.expect(produto.nome).to.not.be.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "GET {{baseUrl}}/produtos/{{produtoId}}",
+              "host": [
+                "GET {{baseUrl}}"
+              ],
+              "path": [
+                "produtos",
+                "{{produtoId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST- Criar produtos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "const produto = pm.response.json();\r",
+                  "\r",
+                  "pm.environment.set(\"produtoId\", produto.id);\r",
+                  "\r",
+                  "pm.test(\"Produto possui ID\", function () {\r",
+                  "    pm.expect(produto.id).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Nome preenchido\", function () {\r",
+                  "    pm.expect(produto.nome).to.not.be.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "POST {{baseUrl}}/produtos",
+              "host": [
+                "POST {{baseUrl}}"
+              ],
+              "path": [
+                "produtos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT-Atualizar produtos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const produto = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Nome atualizado\", function () {\r",
+                  "    pm.expect(produto.nome).to.not.be.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "PUT {{baseUrl}}/produtos/{{produtoId}}",
+              "host": [
+                "PUT {{baseUrl}}"
+              ],
+              "path": [
+                "produtos",
+                "{{produtoId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete- Excluir produtos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const resposta = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Mensagem correta\", function () {\r",
+                  "    pm.expect(resposta.mensagem)\r",
+                  "    .to.eql(\"Produto removido com sucesso\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "DELETE {{baseUrl}}/produtos/{{produtoId}}",
+              "host": [
+                "DELETE {{baseUrl}}"
+              ],
+              "path": [
+                "produtos",
+                "{{produtoId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Pedidos",
+      "item": [
+        {
+          "name": "GET - Listar pedidos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const pedidos = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Retorna um array\", function () {\r",
+                  "    pm.expect(pedidos).to.be.an(\"array\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Existe pelo menos um pedido\", function () {\r",
+                  "    pm.expect(pedidos.length).to.be.greaterThan(0);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "GET {{baseUrl}}/pedidos",
+              "host": [
+                "GET {{baseUrl}}"
+              ],
+              "path": [
+                "pedidos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Buscar pedidos por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const pedido = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"ID correto\", function () {\r",
+                  "    pm.expect(pedido.id)\r",
+                  "    .to.eql(Number(pm.environment.get(\"pedidoId\")));\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Pedido possui dados\", function () {\r",
+                  "    pm.expect(pedido).to.exist;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "GET {{baseUrl}}/pedidos/{{pedidoId}}",
+              "host": [
+                "GET {{baseUrl}}"
+              ],
+              "path": [
+                "pedidos",
+                "{{pedidoId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST- Criar pedidos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 201\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "const pedido = pm.response.json();\r",
+                  "\r",
+                  "pm.environment.set(\"pedidoId\", pedido.id);\r",
+                  "\r",
+                  "pm.test(\"Pedido possui ID\", function () {\r",
+                  "    pm.expect(pedido.id).to.exist;\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Pedido criado corretamente\", function () {\r",
+                  "    pm.expect(pedido).to.exist;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "POST {{baseUrl}}/pedidos",
+              "host": [
+                "POST {{baseUrl}}"
+              ],
+              "path": [
+                "pedidos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT-Atualizar pedidos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const pedido = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Pedido atualizado\", function () {\r",
+                  "    pm.expect(pedido).to.exist;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "PUT {{baseUrl}}/pedidos/{{pedidoId}}",
+              "host": [
+                "PUT {{baseUrl}}"
+              ],
+              "path": [
+                "pedidos",
+                "{{pedidoId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete- Excluir pedidos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status deve ser 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "const resposta = pm.response.json();\r",
+                  "\r",
+                  "pm.test(\"Mensagem correta\", function () {\r",
+                  "    pm.expect(resposta.mensagem)\r",
+                  "    .to.eql(\"Pedido removido com sucesso\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "DELETE {{baseUrl}}/pedidos/{{pedidoId}}",
+              "host": [
+                "DELETE {{baseUrl}}"
+              ],
+              "path": [
+                "pedidos",
+                "{{pedidoId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "GET usuario excluido",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status deve ser 404\", function () {\r",
+              "    pm.response.to.have.status(404);\r",
+              "});\r",
+              "\r",
+              "const resposta = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Mensagem correta\", function () {\r",
+              "    pm.expect(resposta.erro).to.eql(\"Usuário não encontrado\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{baseUrl}}/usuarios/{{usuarioId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "usuarios",
+            "{{usuarioId}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

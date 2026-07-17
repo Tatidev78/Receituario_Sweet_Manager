@@ -16,13 +16,9 @@ export async function getClientes(
 ) {
   try {
     const clientes = await listarClientes()
-
     res.status(200).json(clientes)
-
   } catch (error) {
-
     console.error(error)
-
     res.status(500).json({
       erro: 'Erro ao buscar clientes'
     })
@@ -95,13 +91,10 @@ export async function putCliente(
   try {
 
     const id = Number(req.params.id)
-
     const cliente = await atualizarCliente(
       id,
       req.body
     )
-
-
     res.status(200).json(cliente)
 
 
@@ -125,10 +118,7 @@ export async function deleteCliente(
   try {
 
     const id = Number(req.params.id)
-
     await deletarCliente(id)
-
-
     res.status(200).json({
       mensagem: 'Cliente removido com sucesso'
     })
@@ -137,7 +127,6 @@ export async function deleteCliente(
   } catch (error) {
 
     console.error(error)
-
     res.status(500).json({
       erro: 'Erro ao deletar cliente'
     })

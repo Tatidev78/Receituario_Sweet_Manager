@@ -25,9 +25,7 @@ export async function criarCliente(dados: {
       endereco: dados.endereco
     }
   })
-
 }
-
 
 // GET /clientes/:id
 export async function buscarClientePorId(id: number) {

@@ -29,7 +29,13 @@ router.put('/:id', putCategoria)
 
 
 // deletar categoria
-router.delete('/:id', deleteCategoria)
+router.delete('/:id', (req, res) => {
+
+  console.log("ENTROU NO DELETE", req.params.id)
+
+  deleteCategoria(req, res)
+
+})
 
 
 export default router
